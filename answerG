@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <title>Genel Kültür Quiz</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #f0f2f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+    }
+    .quiz-container {
+      background: white;
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 600px;
+      width: 90%;
+      text-align: center;
+    }
+    h2 {
+      color: #007bff;
+    }
+    .question {
+      font-size: 20px;
+      color: #333;
+      margin-bottom: 15px;
+    }
+    .options {
+      list-style: none;
+      padding: 0;
+    }
+    .options li {
+      margin: 10px 0;
+    }
+    .options label {
+      display: block;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    .options label:hover {
+      background-color: #f8f9fa;
+    }
+    .options input[type="radio"] {
+      margin-right: 8px;
+    }
+    button {
+      padding: 12px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 8px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 18px;
+      color: #28a745;
+    }
+  </style>
+</head>
+<body>
+  <div class="quiz-container">
+    <h2>Genel Kültür Quiz</h2>
+    <div id="quiz">
+      <div class="question" id="question"></div>
+      <ul class="options" id="options"></ul>
+      <button onclick="submitAnswer()">Cevapla</button>
+      <div class="result" id="result"></div>
+    </div>
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        question: "Türkiye'nin başkenti neresidir?",
+        options: ["İstanbul", "Ankara", "İzmir", "Bursa"],
+        answer: "Ankara",
+        explanation: "Ankara, 13 Ekim 1923'te başkent olarak ilan edilmiştir."
+      },
+      {
+        question: "Mustafa Kemal Atatürk hangi yılda doğmuştur?",
+        options: ["1881", "1923", "1938", "1905"],
+        answer: "1881",
+        explanation: "Atatürk, 1881 yılında Selanik'te doğmuştur."
+      },
+      {
+        question: "Dünya'nın doğal uydusu hangisidir?",
+        options: ["Venüs", "Ay", "Mars", "Güneş"],
+        answer: "Ay",
+        explanation: "Ay, Dünya'nın tek doğal uydusudur."
+      }
+    ];
+
+    let currentQuestion = 0;
+    let score = 0;
+
+    function loadQuestion() {
+      const questionData = quizData[currentQuestion];
+      document.getElementById("question").textContent = questionData.question;
+      const optionsList = document.getElementById("options");
+      optionsList.innerHTML = "";
+
+      questionData.options.forEach(option => {
+        const li = document.createElement("li");
+        li.innerHTML = `<label><input type="radio" name="option" value="${option}"> ${option}</label>`;
+        optionsList.appendChild(li);
+      });
+    }
+
+    function submitAnswer() {
+      const selectedOption = document.querySelector('input[name="option"]:checked');
+      const resultDiv = document.getElementById("result");
+
+      if (!selectedOption) {
+        resultDiv.textContent = "Lütfen bir seçenek seçin.";
+        return;
+      }
+
+      const answer = selectedOption.value;
+      const correctAnswer = quizData[currentQuestion].answer;
+      const explanation = quizData[currentQuestion].explanation;
+
+      if (answer === correctAnswer) {
+        score++;
+        resultDiv.innerHTML = `<span style="color:green;">Doğru! ${explanation}</span>`;
+      } else {
+        resultDiv.innerHTML = `<span style="color:red;">Yanlış! Doğru cevap: ${correctAnswer}. ${explanation}</span>`;
+      }
+
+      currentQuestion++;
+
+      if (currentQuestion < quizData.length) {
+        setTimeout(() => {
+          loadQuestion();
+          resultDiv.textContent = "";
+        }, 2000);
+      } else {
+        document.getElementById("quiz").innerHTML = `<div class="result">Quiz bitti! Doğru sayısı: ${score} / ${quizData.length}</div>`;
+      }
+    }
+
+    loadQuestion();
+  </script>
+</body>
+</html>
